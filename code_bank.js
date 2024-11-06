@@ -143,4 +143,24 @@ function accumulate_array(f, initial, a) {
 
 // Sorting Algorithms
 
+// Selection Sort
+function selection_sort_list(ls) {
+    function smallest(ls) {
+        return is_null(ls)
+            ? null 
+            : is_null(tail(ls))
+            ? head(ls)
+            : head(ls) > smallest(tail(ls))
+            ? smallest(tail(ls))
+            : head(ls);
+    }
+    
+    if (is_null(ls)) {
+        return null;
+    } else {
+        const x = smallest(ls);
+        return pair(x, selection_sort_list(remove(x, ls)));
+    }
+}
+
 
