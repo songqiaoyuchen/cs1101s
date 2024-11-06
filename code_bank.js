@@ -125,7 +125,22 @@ function insert_to_array(item, a, i) {
     return a;
 }
 
-const my_list = list(0, 1, 2, 2, 3, 4);
-stream_to_list(list_to_stream(my_list));
+function map_array(f, a) {
+    for (let i = 0; i < array_length(a); i = i + 1) {
+        a[i] = f(a[i]);
+    }
+    
+    return a;
+}
+
+function accumulate_array(f, initial, a) {
+    for (let i = 0; i < array_length(a); i = i + 1) {
+        initial = f(a[i], initial);
+    }
+    
+    return initial;
+}
+
+// Sorting Algorithms
 
 
