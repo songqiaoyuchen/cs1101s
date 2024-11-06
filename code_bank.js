@@ -52,11 +52,77 @@ function list_to_stream(ls) {
         : pair(head(ls), () => list_to_stream(tail(ls)));
 }
 
+// stream -> list
 function stream_to_list(s) {
     // for infinite streams, use eval_stream(s, n)
     return is_null(s)
         ? null
         : pair(head(s), stream_to_list(stream_tail(s)));
+}
+
+// array -> stream
+function array_to_stream(a) {
+    // eval_stream error if n > stream_length
+    function helper(a, i) {
+        return a[i] === undefined
+            ? null 
+            : pair(a[i], () => helper(a, i + 1));
+    }
+    
+    return helper(a, 0);
+}
+
+// stream -> array
+function stream_to_array(s) {
+    const output = [];
+
+    while (!is_null(s)) {
+        output[array_length(output)] = head(s);
+        s = stream_tail(s);
+    }
+    
+    return output;
+}
+
+
+
+// Array Processing
+
+function array_slice(a, start, end) {
+    // create new array from a[start] to a[end]
+    const output = [];
+    
+    for (let i = start; i <= end; i = i + 1) {
+        if (i >= array_length(a)) {
+            return "error: index out of range";
+            break;
+        } else {
+            output[array_length(output)] = a[i];
+        }
+    }
+    
+    return output;
+}
+
+function append_array(a1, a2) {
+    // join two arrays together
+    for (let i = 0; i < array_length(a2); i = i + 1) {
+        a1[array_length(a1)] = a2[i];
+    }
+    
+    return a1;
+}
+
+function insert_to_array(item, a, i) {
+    // insert item at a[i] and shifts items in a accordingly
+    for (let j = array_length(a) - 1; j >= 0; j = j - 1) {
+        if (j >= i) {
+            a[j + 1] = a[j];
+        }
+    }
+    a[i] = item;
+    
+    return a;
 }
 
 const my_list = list(0, 1, 2, 2, 3, 4);
