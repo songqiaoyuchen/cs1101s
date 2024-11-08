@@ -88,13 +88,13 @@ function stream_to_array(s) {
 
 // List Processing
 
-// Remove Duplicates
 function remove_duplicates(xs) {
+    // returns list of unique elements in
     return accumulate((x, ys) => pair(x, filter(y => !equal(x, y), ys)), null, xs);
 }
 
-// Subsets
 function subset(xs) {
+    // returns powerset of xs 
     function add(xs, lst) {
         return map(x => append(x, list(head(xs))), lst);
     }
@@ -108,8 +108,8 @@ function subset(xs) {
     return helper(xs, list(null));
 }
 
-// Permutations
 function permutations(xs) {
+    // return a list of all permutations of xs
     function insert(index, xs, element) {
         return index === 0
             ? append(element, xs)
