@@ -104,15 +104,6 @@ function array_slice(a, start, end) {
     return output;
 }
 
-function append_array(a1, a2) {
-    // join two arrays together
-    for (let i = 0; i < array_length(a2); i = i + 1) {
-        a1[array_length(a1)] = a2[i];
-    }
-    
-    return a1;
-}
-
 function insert_to_array(item, a, i) {
     // insert item at a[i] and shifts items in a accordingly
     for (let j = array_length(a) - 1; j >= 0; j = j - 1) {
@@ -123,6 +114,45 @@ function insert_to_array(item, a, i) {
     a[i] = item;
     
     return a;
+}
+
+function remove_array_index(a, i) {
+    // remove array item at index i
+    if (i >= array_length(a)) {
+        return "error: index out of range.";
+    }
+    
+    const output = [];
+    
+    for(let j = 0; j < array_length(a) - 1; j = j + 1) {
+        if (j < i) {
+            output[j] = a[j];
+        } else {
+            output[j] = a[j + 1];
+        }
+    }
+    
+    return output;
+}
+
+function remove_array_item(a, item) {
+    // remove first item in array that === item
+    for(let i = 0; i < array_length(a); i = i + 1) {
+        if (a[i] === item) {
+           return remove_array_index(a, i);
+        }
+    }
+    
+    return a; // if item not found, return original array
+}
+
+function append_array(a1, a2) {
+    // join two arrays together
+    for (let i = 0; i < array_length(a2); i = i + 1) {
+        a1[array_length(a1)] = a2[i];
+    }
+    
+    return a1;
 }
 
 function map_array(f, a) {
@@ -172,6 +202,50 @@ function tree_to_array(tree) {
 
 
 // Sorting Algorithms
+
+// Selection Sort
+function selection_sort_list(ls) {
+    function smallest(ls) {
+        return is_null(ls)
+            ? null 
+            : is_null(tail(ls))
+            ? head(ls)
+            : head(ls) > smallest(tail(ls))
+            ? smallest(tail(ls))
+            : head(ls);
+    }
+    
+    if (is_null(ls)) {
+        return null;
+    } else {
+        const x = smallest(ls);
+        return pair(x, selection_sort_list(remove(x, ls)));
+    }
+}
+
+function selection_sort_array(a) {
+    function smallest(a) {
+        let output = a[0];
+        
+        for (let i = 1; i < array_length(a); i = i + 1) {
+            if (a[i] < output) {
+                output = a[i];
+            }
+        }
+
+        return output;
+    }
+    
+    const output = [];
+    let temp = a;
+    for (let i = 0; i < array_length(a); i = i + 1) {
+        const x = smallest(temp);
+        output[i] = x;
+        temp = remove_array_item(temp, x);
+    }
+    
+    return output;
+}
 
 // Insertion Sort
 function insert(x, xs) {
