@@ -141,6 +141,68 @@ function accumulate_array(f, initial, a) {
     return initial;
 }
 
+
+
+// Tree Processing
+
+function map_tree(f, tree) {
+    // for tree of numbers
+    return map(x => { if (is_number(x)) {
+                        return f(x);
+                      } else {
+                        return map_tree(f, x);
+                      }
+                    }, tree);
+}
+
+function tree_to_array(tree) {
+    if (is_null(tree)) {
+        return null;
+    } else if (is_number(tree)) {
+      return tree;  
+    } else {
+        let temp = [];
+        for (let i = 0; i < length(tree); i = i + 1) {
+            temp[i] = tree_to_array(list_ref(tree, i));
+        }
+        return temp;
+    }
+}
+
+
+
 // Sorting Algorithms
 
+// Insertion Sort
+function insert(x, xs) {
+    return is_null(xs)
+           ? list(x)
+           : x <= head(xs)
+           ? pair(x, xs)
+           : pair(head(xs), insert(x, tail(xs)));
+}
 
+function insertion_sort(xs) {
+    return is_null(xs)
+           ? xs
+           : insert(head(xs), insertion_sort(tail(xs)));
+}
+
+// Bubble Sort
+function bubblesort_list(L) {
+    function swap(xs) {
+        if (is_null(xs) || is_null(tail(xs))) {
+            return false;
+        }
+        let first = head(xs);
+        let second = head(tail(xs));
+        
+        if (first > second) {
+            set_head(xs, second);
+            set_head(tail(xs), first);
+            return true;
+        }
+        return swap(tail(xs));
+    }
+    while (swap(L)) {}
+}
