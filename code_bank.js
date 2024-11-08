@@ -86,6 +86,51 @@ function stream_to_array(s) {
 
 
 
+// List Processing
+
+// Remove Duplicates
+function remove_duplicates(xs) {
+    return accumulate((x, ys) => pair(x, filter(y => !equal(x, y), ys)), null, xs);
+}
+
+// Subsets
+function subset(xs) {
+    function add(xs, lst) {
+        return map(x => append(x, list(head(xs))), lst);
+    }
+    function helper(xs, lst) {
+        if (is_null(xs)) {
+            return lst;
+        } else {
+            return helper(tail(xs), append(add(xs, lst), lst));
+        }
+    }
+    return helper(xs, list(null));
+}
+
+// Permutations
+function permutations(xs) {
+    function insert(index, xs, element) {
+        return index === 0
+            ? append(element, xs)
+            : insert(index - 1, tail(xs), pair(head(xs), element));
+    }
+    function insert_all(n, lst, element) {
+        return n < 0
+            ? null
+            : pair(insert(n, lst, list(element)), insert_all(n - 1, lst, element));
+    }
+    function main(xs, lst) {
+        return is_null(xs)
+            ? lst
+            : main(tail(xs), accumulate(append, null, (map(x => insert_all(length(x), x,
+                            head(xs)), lst))));
+    }
+    return main(xs, list(null));
+}
+
+
+
 // Array Processing
 
 function array_slice(a, start, end) {
@@ -279,4 +324,36 @@ function bubblesort_list(L) {
         return swap(tail(xs));
     }
     while (swap(L)) {}
+}
+
+// Merge Sort
+function merge_sort(xs) {
+    function merge(xs, ys) {
+        if (is_null(xs)) {
+            return ys;
+        } else if (is_null(ys)) {
+            return xs;
+        } else {
+            return head(xs) < head(ys)
+                ? pair(head(xs), merge(tail(xs), ys))
+                : pair(head(ys), merge(xs, tail(ys)));
+        }
+    }
+    function take(xs, n) {
+        return n === 0
+            ? null
+            : pair(head(xs), take(tail(xs), n - 1));
+    }
+    function drop(xs, n) {
+        return n === 0
+            ? xs
+            : drop(tail(xs), n - 1);
+    }
+    if (is_null(xs) || is_null(tail(xs))) {
+        return xs;
+    } else {
+        const mid = math_floor(length(xs) / 2);
+        return merge(merge_sort(take(xs, mid)),
+                merge_sort(drop(xs, mid)));
+    }
 }
