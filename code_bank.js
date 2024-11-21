@@ -231,10 +231,9 @@ function map_tree(f, tree) {
 }
 
 function tree_to_array(tree) {
-    if (is_null(tree)) {
-        return null;
-    } else if (is_number(tree)) {
-      return tree;  
+    // for tree of numbers
+    if (is_number(tree)) {
+        return tree;  
     } else {
         let temp = [];
         for (let i = 0; i < length(tree); i = i + 1) {
@@ -242,6 +241,30 @@ function tree_to_array(tree) {
         }
         return temp;
     }
+}
+
+function tree_to_array_2(tree) {
+    // for tree of numbers
+    const res = [];
+    for (let i = 0; i < length(tree); i = i + 1) {
+        if (is_number(head(tree))) {
+            res[i] = list_ref(tree, i);
+        } else {
+            res[i] = tree_to_array_2(list_ref(tree, i));
+        }
+    }
+    return res;
+}
+
+function tree_to_array_3(tree) {
+    // for tree of numbers
+    const res = [];
+    map(x => is_null(x)
+            ? res[array_length(res)] = []
+            : is_number(x)
+            ? res[array_length(res)] = x
+            : res[array_length(res)] = tree_to_array_3(x), tree);
+    return res;
 }
 
 
